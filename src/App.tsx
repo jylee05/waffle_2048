@@ -275,7 +275,6 @@ const App = () => {
     <div className="game-container">
       <div className="header-container">
         <h1 className="title">2048 Game</h1>
-        <p className="subtitle">Join the numbers and get to the 2048 tile!</p>
         <div className="score-container">
           <div className="score-box">
             <div className="score-label">SCORE</div>

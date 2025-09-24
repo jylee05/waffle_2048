@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import "./styles.css";
 
-// ---------- 타입 정의 ----------
+// ---------- Tile definition ----------
 type Cell = { value: number; merged: boolean } | null;
 type Map2048 = Cell[][];
 type Direction = "up" | "down" | "left" | "right";
@@ -11,7 +11,7 @@ type MoveResult = {
   scoreGained: number;
 };
 
-// ---------- 상수 ----------
+// ---------- Constants ----------
 const SIZE = 4;
 
 const TILE_COLORS: Record<number, string> = {
@@ -24,9 +24,9 @@ const TILE_COLORS: Record<number, string> = {
   128: "tile-128",
 };
 
-// ---------- 헬퍼 함수 ----------
+// ---------- Helper Function ----------
 
-// 새 타일 생성
+// Generate new tile
 const generateTile = (map: Map2048): Map2048 => {
   const emptyCells: [number, number][] = [];
   map.forEach((row, y) =>
@@ -44,7 +44,7 @@ const generateTile = (map: Map2048): Map2048 => {
   return newMap;
 };
 
-// 좌측 이동 로직
+// Move left logic
 const moveLeft = (map: Map2048): MoveResult => {
   let moved = false;
   let scoreGained = 0;
@@ -91,7 +91,7 @@ const moveLeft = (map: Map2048): MoveResult => {
   return { result: newMap, isMoved: moved, scoreGained };
 };
 
-// 맵 회전
+// Rotate map
 const rotateMap = (map: Map2048, times: number): Map2048 => {
   let rotated = map.map((row) =>
     row.map((cell) => (cell ? { ...cell } : null))
@@ -102,7 +102,7 @@ const rotateMap = (map: Map2048, times: number): Map2048 => {
   return rotated;
 };
 
-// 방향별 회전 매핑
+// Rotation mapping
 const directionToRotation: Record<Direction, number> = {
   left: 0,
   up: 3,
@@ -110,13 +110,13 @@ const directionToRotation: Record<Direction, number> = {
   down: 1,
 };
 
-// ---------- merged 초기화 ----------
+// ---------- Reset merged ----------
 const resetMerged = (map: Map2048): Map2048 =>
   map.map((row) =>
     row.map((cell) => (cell ? { ...cell, merged: false } : null))
   );
 
-// ---------- 방향 이동 통합 ----------
+// ---------- Move map integration ----------
 const moveMap = (map: Map2048, direction: Direction) => {
   const rotatedTimes = directionToRotation[direction];
   let rotated = rotateMap(map, rotatedTimes);
@@ -125,19 +125,19 @@ const moveMap = (map: Map2048, direction: Direction) => {
   return { result: finalMap, isMoved, scoreGained };
 };
 
-// 게임 오버 여부 확인
+// Check Gameover
 const checkGameOver = (map: Map2048): boolean => {
-  // 빈 칸이 있으면 게임 오버가 아님
+  // Not a gameover if there's a blank space
   if (map.flat().some((cell) => cell === null)) {
     return false;
   }
 
-  // 인접한 타일 중 같은 숫자가 있는지 확인
+  // Check for same number for neighboring tiles
   for (let y = 0; y < SIZE; y++) {
     for (let x = 0; x < SIZE; x++) {
       const value = map[y][x]?.value;
       if (value) {
-        // 인접한 셀 확인
+        // Check near tiles
         const directions = [
           [0, 1],
           [0, -1],
@@ -149,14 +149,14 @@ const checkGameOver = (map: Map2048): boolean => {
           const newX = x + dx;
           if (newY >= 0 && newY < SIZE && newX >= 0 && newX < SIZE) {
             if (map[newY][newX]?.value === value) {
-              return false; // 합쳐질 타일이 있음
+              return false; // Exist tiles to be merged
             }
           }
         }
       }
     }
   }
-  return true; // 더 이상 움직일 수 없음
+  return true; // Can't move anymore
 };
 
 // ---------- App Component ----------
@@ -205,12 +205,12 @@ const App = () => {
         localStorage.setItem("2048-best-score", JSON.stringify(newScore));
       }
 
-      // 128 타일 도달 시 승리
+      // Reach 128 tiles
       if (newMap.flat().some((cell) => cell?.value === 128)) {
         setWin(true);
       }
 
-      // 더 이상 움직일 수 없을 때 게임 오버
+      // Check Gameover
       if (checkGameOver(newMap)) {
         setGameOver(true);
       }
@@ -241,7 +241,7 @@ const App = () => {
     localStorage.setItem("map2048_score", "0");
   };
 
-  // 최고 점수 초기화
+  // Rest Best score
   const handleResetBestScore = () => {
     setBestScore(0);
     localStorage.removeItem("2048-best-score");

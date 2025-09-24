@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./styles.css";
 
 // ---------- 타입 정의 ----------
@@ -180,7 +180,7 @@ const App = () => {
     return saved ? JSON.parse(saved) : 0;
   });
 
-  const [history, setHistory] = useState<Map2048[]>([]);
+  const [_history, setHistory] = useState<Map2048[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false);
 

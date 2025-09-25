@@ -180,7 +180,12 @@ const App = () => {
     return saved ? JSON.parse(saved) : 0;
   });
 
-  const [_history, setHistory] = useState<Map2048[]>([]);
+  type HistoryState = {
+    map: Map2048;
+    score: number;
+  };
+
+  const [history, setHistory] = useState<HistoryState[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false);
 
@@ -192,7 +197,7 @@ const App = () => {
       if (!isMoved) return;
 
       const newMap = generateTile(result);
-      setHistory((prev) => [...prev, map]);
+      setHistory((prev) => [...prev, { map, score }]);
       setMap(resetMerged(newMap));
       const newScore = score + scoreGained;
       setScore(newScore);
@@ -223,8 +228,10 @@ const App = () => {
     setHistory((prev) => {
       if (prev.length === 0) return prev;
       const last = prev[prev.length - 1];
-      setMap(resetMerged(last));
-      localStorage.setItem("map2048", JSON.stringify(last));
+      setMap(resetMerged(last.map));
+      setScore(last.score);
+      localStorage.setItem("map2048", JSON.stringify(last.map));
+      localStorage.setItem("map2048_score", JSON.stringify(last.score));
       return prev.slice(0, -1);
     });
   };

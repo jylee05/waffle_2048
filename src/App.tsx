@@ -185,7 +185,7 @@ const App = () => {
     score: number;
   };
 
-  const [history, setHistory] = useState<HistoryState[]>([]);
+  const [_history, setHistory] = useState<HistoryState[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false);
 

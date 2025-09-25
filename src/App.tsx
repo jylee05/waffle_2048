@@ -277,6 +277,41 @@ const App = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleMove, gameOver, win]);
 
+  useEffect(() => {
+    let startX = 0;
+    let startY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+
+      const dx = endX - startX;
+      const dy = endY - startY;
+
+      // Determine direction
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) handleMove("right");
+        else if (dx < -30) handleMove("left");
+      } else {
+        if (dy > 30) handleMove("down");
+        else if (dy < -30) handleMove("up");
+      }
+    };
+
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [handleMove]);
+
   // ---------- Render ----------
   return (
     <div className="game-container">

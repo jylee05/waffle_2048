@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import "./styles.css";
+import { useCallback, useEffect, useState } from 'react';
+import './styles.css';
 
 // ---------- Tile definition ----------
 type Cell = { value: number; merged: boolean } | null;
 type Map2048 = Cell[][];
-type Direction = "up" | "down" | "left" | "right";
+type Direction = 'up' | 'down' | 'left' | 'right';
 type MoveResult = {
   result: Map2048;
   isMoved: boolean;
@@ -15,13 +15,13 @@ type MoveResult = {
 const SIZE = 4;
 
 const TILE_COLORS: Record<number, string> = {
-  2: "tile-2",
-  4: "tile-4",
-  8: "tile-8",
-  16: "tile-16",
-  32: "tile-32",
-  64: "tile-64",
-  128: "tile-128",
+  2: 'tile-2',
+  4: 'tile-4',
+  8: 'tile-8',
+  16: 'tile-16',
+  32: 'tile-32',
+  64: 'tile-64',
+  128: 'tile-128',
 };
 
 // ---------- Helper Function ----------
@@ -119,7 +119,7 @@ const resetMerged = (map: Map2048): Map2048 =>
 // ---------- Move map integration ----------
 const moveMap = (map: Map2048, direction: Direction) => {
   const rotatedTimes = directionToRotation[direction];
-  let rotated = rotateMap(map, rotatedTimes);
+  const rotated = rotateMap(map, rotatedTimes);
   const { result, isMoved, scoreGained } = moveLeft(rotated);
   const finalMap = rotateMap(result, (4 - rotatedTimes) % 4);
   return { result: finalMap, isMoved, scoreGained };
@@ -166,17 +166,17 @@ const App = () => {
   );
 
   const [map, setMap] = useState<Map2048>(() => {
-    const saved = localStorage.getItem("map2048");
+    const saved = localStorage.getItem('map2048');
     return saved ? JSON.parse(saved) : generateTile(generateTile(emptyMap));
   });
 
   const [score, setScore] = useState<number>(() => {
-    const saved = localStorage.getItem("map2048_score");
+    const saved = localStorage.getItem('map2048_score');
     return saved ? JSON.parse(saved) : 0;
   });
 
   const [bestScore, setBestScore] = useState<number>(() => {
-    const saved = localStorage.getItem("2048-best-score");
+    const saved = localStorage.getItem('2048-best-score');
     return saved ? JSON.parse(saved) : 0;
   });
 
@@ -202,12 +202,12 @@ const App = () => {
       const newScore = score + scoreGained;
       setScore(newScore);
 
-      localStorage.setItem("map2048", JSON.stringify(newMap));
-      localStorage.setItem("map2048_score", JSON.stringify(newScore));
+      localStorage.setItem('map2048', JSON.stringify(newMap));
+      localStorage.setItem('map2048_score', JSON.stringify(newScore));
 
       if (newScore > bestScore) {
         setBestScore(newScore);
-        localStorage.setItem("2048-best-score", JSON.stringify(newScore));
+        localStorage.setItem('2048-best-score', JSON.stringify(newScore));
       }
 
       // Reach 128 tiles
@@ -230,8 +230,8 @@ const App = () => {
       const last = prev[prev.length - 1];
       setMap(resetMerged(last.map));
       setScore(last.score);
-      localStorage.setItem("map2048", JSON.stringify(last.map));
-      localStorage.setItem("map2048_score", JSON.stringify(last.score));
+      localStorage.setItem('map2048', JSON.stringify(last.map));
+      localStorage.setItem('map2048_score', JSON.stringify(last.score));
       return prev.slice(0, -1);
     });
   };
@@ -244,14 +244,14 @@ const App = () => {
     setHistory([]);
     setGameOver(false);
     setWin(false);
-    localStorage.setItem("map2048", JSON.stringify(newMap));
-    localStorage.setItem("map2048_score", "0");
+    localStorage.setItem('map2048', JSON.stringify(newMap));
+    localStorage.setItem('map2048_score', '0');
   };
 
   // Rest Best score
   const handleResetBestScore = () => {
     setBestScore(0);
-    localStorage.removeItem("2048-best-score");
+    localStorage.removeItem('2048-best-score');
   };
 
   // ---------- Keyboard ----------
@@ -259,22 +259,22 @@ const App = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (gameOver || win) return;
       switch (e.key) {
-        case "ArrowUp":
-          handleMove("up");
+        case 'ArrowUp':
+          handleMove('up');
           break;
-        case "ArrowDown":
-          handleMove("down");
+        case 'ArrowDown':
+          handleMove('down');
           break;
-        case "ArrowLeft":
-          handleMove("left");
+        case 'ArrowLeft':
+          handleMove('left');
           break;
-        case "ArrowRight":
-          handleMove("right");
+        case 'ArrowRight':
+          handleMove('right');
           break;
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleMove, gameOver, win]);
 
   useEffect(() => {
@@ -295,20 +295,20 @@ const App = () => {
 
       // Determine direction
       if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 30) handleMove("right");
-        else if (dx < -30) handleMove("left");
+        if (dx > 30) handleMove('right');
+        else if (dx < -30) handleMove('left');
       } else {
-        if (dy > 30) handleMove("down");
-        else if (dy < -30) handleMove("up");
+        if (dy > 30) handleMove('down');
+        else if (dy < -30) handleMove('up');
       }
     };
 
-    window.addEventListener("touchstart", handleTouchStart);
-    window.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [handleMove]);
 
@@ -352,10 +352,10 @@ const App = () => {
             <div
               key={idx}
               className={`tile ${
-                cell ? TILE_COLORS[cell.value] : "tile-empty"
-              } ${cell?.merged ? "merged-tile" : ""}`}
+                cell ? TILE_COLORS[cell.value] : 'tile-empty'
+              } ${cell?.merged ? 'merged-tile' : ''}`}
             >
-              {cell?.value || ""}
+              {cell?.value || ''}
             </div>
           ))}
         </div>

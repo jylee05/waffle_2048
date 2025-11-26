@@ -8,7 +8,7 @@ export const moveMapIn2048Rule = (
   map: Map2048,
   direction: Direction
 ): MoveResult => {
-  if (!validateMapIsNByM(map)) throw new Error("Map is not N by M");
+  if (!validateMapIsNByM(map)) throw new Error('Map is not N by M');
 
   const rotatedMap = rotateMapCounterClockwise(map, rotateDegreeMap[direction]);
 
@@ -111,7 +111,7 @@ const revertDegreeMap: DirectionDegreeMap = {
 
 type Cell = number | null;
 export type Map2048 = Cell[][];
-type Direction = "up" | "left" | "right" | "down";
+type Direction = 'up' | 'left' | 'right' | 'down';
 type RotateDegree = 0 | 90 | 180 | 270;
 type DirectionDegreeMap = Record<Direction, RotateDegree>;
 type MoveResult = { result: Map2048; isMoved: boolean };
